@@ -1,10 +1,6 @@
 package workspace
 
-import (
-	"os"
-	"path/filepath"
-	"strings"
-)
+import "path/filepath"
 
 // Document is a file in a directory.
 type Document struct {
@@ -24,8 +20,10 @@ func NewDocument(root, path string) Document {
 
 // Path is the normalized path.
 // It uses forward slashes regardless of the operating system.
-func (doc Document) Path() string {
-	path := strings.Replace(doc.Filepath, doc.Root, "", 1)
-	path = strings.TrimLeft(path, string(os.PathSeparator))
-	return filepath.ToSlash(path)
+func (doc Document) Path() (string, error) {
+	path, err := filepath.Rel(doc.Root, doc.Filepath)
+	if err != nil {
+		return "", err
+	}
+	return filepath.ToSlash(path), nil
 }

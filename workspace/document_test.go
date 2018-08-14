@@ -25,6 +25,8 @@ func TestNormalizedDocumentPath(t *testing.T) {
 
 	for _, tc := range testCases {
 		doc := NewDocument(root, tc.filepath)
-		assert.Equal(t, tc.path, doc.Path())
+		path, err := doc.Path()
+		assert.NoError(t, err)
+		assert.Equal(t, tc.path, path)
 	}
 }
